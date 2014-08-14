@@ -61,8 +61,9 @@ function d3Start(){
          $('#tooltip').empty();        
       });
     $("#loading").fadeOut(300);
+    $("#livelihood").click();
   });
-  $("#livelihood").click();
+  
 }
 
 var municipData;
