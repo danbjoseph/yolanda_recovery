@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- When using d3.js, make sure you are using the following meta in your head tag 
+    or it might have trouble with some characters.  -->
+    <!-- <meta http-equiv="content-type" content="text/html; charset=UTF8"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Haiyan Operation: Shelter</title>
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/main.css" rel="stylesheet" />
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    
+  </head>
+
+  <body>
+
+    <div id="tooltip"></div>
+    <div id="loading"><img id="loader" src="img/ajax_loader_gray_512.gif" /></div>
+    
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div>
+          <a class="navbar-brand navbar-logo" href="#" target="_blank"><img class="prc-logo" src="img/PRC-logo_whiteBorder.png"></a>
+          <a class="navbar-brand" href="http://www.redcross.org.ph/">Philippine Red Cross</a>
+          <a class="navbar-brand" href="#"><small>Haiyan Operation</small></a>
+          <a class="navbar-brand" href="#"><small>Recovery</small></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div id="loading"><img id="loader" src="img/ajax_loader_gray_512.gif" /></div>  -->   
+     
+    <div class="container-fluid">
+    <div class="row">     
+      <div class="col-map">
+        
+        <div id="map">
+          <button class="btn btn-sm btn-zoom" type="button" onClick="zoomOut();"><span class="glyphicon glyphicon-zoom-out"></span> Zoom Out</button>
+        </div>
+      </div> <!-- /.col-map -->
+    </div>
+    <div class="row" style="padding:0 10px;">
+
+         
+
+      <div id="sector-options" style="margin-left:10px;">
+        <button id="livelihood" class="btn btn-default btn-sm btn-sector" type="button" onClick="loadSector('livelihood', this)"><img class="sector-btn-img" src="img/livelihood.png"> Livelihood</button> 
+        <button id="shelter" class="btn btn-default btn-sm btn-sector" type="button" onClick="loadSector('shelter', this)"><img class="sector-btn-img" src="img/shelter.png"> Shelter</button> 
+        <button id="education" class="btn btn-default btn-sm btn-sector" type="button" onClick="loadSector('education', this)"><img class="sector-btn-img" src="img/education.png"> Education</button>
+        <button id="watsan" class="btn btn-default btn-sm btn-sector" type="button" onClick="loadSector('watsan', this)"><img class="sector-btn-img" src="img/watsan.png"> Water & Sanitation</button>
+        <button id="health" class="btn btn-default btn-sm btn-sector" type="button" onClick="loadSector('health', this)"><img class="sector-btn-img" src="img/health.png"> Health</button>
+      </div>
+
+      <p><h6>
+        <b>Cooperating Partners:</b>
+        <span  id="partnerButtons" style="padding-left:10px;"></span>
+      </h6></p>
+
+      <div id="sector-accomplished">
+
+        <table class="table table-striped table-condensed">
+          <colgroup></colgroup>
+          <thead>
+            <tr id="sector-accomplished_headers">
+              
+            </tr>
+          </thead>
+          <tbody id="sector-accomplished_content">
+            <!-- <tr>
+              <td onClick="toggleProvince('Cebu', this);">Province Name</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr> -->
+          </tbody>
+        </table>
+
+      </div>
+      <hr>
+       <p>This site is under development. Thank you for your patience. Please submit feedback and data corrections by <a href="mailto:daniel.joseph@ifrc.org" target="_blank" title="daniel.joseph@ifrc.org">email</a>. <span style="font-weight:bold;"> Last updated: August 13, 2014.</span></p>
+
+    </div>
+
+    </div> <!-- /.container-fluid -->
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/d3.min.js"></script>
+    <script src="js/topojson.v1.min.js"></script>
+
+    <script src="js/main.js"></script>
+
+
+  </body>
+</html>
