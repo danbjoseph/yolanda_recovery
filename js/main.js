@@ -1,5 +1,4 @@
 var pageHeight = $(window).height();
-$("#loader").css("height", pageHeight * 0.75 );
 
 var pageWidth = $(window).width() - 15;
 //document width ???

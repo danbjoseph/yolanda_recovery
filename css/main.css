@@ -76,7 +76,8 @@ circle {
   text-align: center;
 }
 #loader{
-  height: 0px;
+  height: 280px;
+  margin-top: 10px;
 }
 .container-fluid, .col-map {
   padding: 0;
