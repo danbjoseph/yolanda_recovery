@@ -7,7 +7,7 @@ var width = pageWidth,
     height = 300;
 
 var projection = d3.geo.mercator()
-    .scale(4000)
+    .scale(5000)
     .center([124,11])
     .translate([width / 2, height / 2]);
 
@@ -23,7 +23,7 @@ var zoom = d3.behavior.zoom()
 var formatCommas = d3.format(",");
 
 function zoomed() {
-  provinceGroup.style("stroke-width", 1.5 / d3.event.scale + "px");
+  provinceGroup.style("stroke-width", 1.2 / d3.event.scale + "px");
   municipGroup.style("stroke-width", 1 / d3.event.scale + "px");
   brgyGroup.style("stroke-width", 1 / d3.event.scale + "px");
   provinceGroup.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
@@ -35,11 +35,9 @@ var svg = d3.select("#map").append("svg")
     .attr("width", width)
     .attr("height", height);
 
-
 var provinceGroup = svg.append('g').attr("id", "province-mapped");
 var municipGroup = svg.append('g').attr("id", "municip-mapped");
 var brgyGroup = svg.append('g').attr("id", "brgy-mapped");
-
 
 svg
     // .call(zoom) // delete this line to disable free zooming
@@ -62,8 +60,7 @@ function d3Start(){
       });
     $("#loading").fadeOut(300);
     $("#livelihood").click();
-  });
-  
+  }); 
 }
 
 var municipData;
@@ -76,8 +73,6 @@ d3.json("data/brgyData_empty.json", function(data) {
   brgyData = data;
 });
 
-
-
 var livelihoodData = [];
 var shelterData = [];
 var healthData = [];
@@ -88,6 +83,7 @@ var indicatorList = [];
 var partnerList = [];
 var partnerButtons;
 
+// adds "PH" to start of p-code in activity data so that format matches spatial data attributes
 function addPH(data){
   $(data).each(function(index, record){
     record.Admin2 = "PH"+record.Admin2;
@@ -210,8 +206,7 @@ function loadSector(sector, target){
     } else {
       parsePartners();
     }    
-  }
-    
+  }    
 }
 
 //rebuild partners buttons
@@ -223,7 +218,6 @@ function parsePartners() {
         partnerList.push(partnerName);
     }; 
   });
-
   var partnerFilterHtml = '<button id="ALL-PARTNERS" class="btn btn-sm btn-donor filtering all" type="button" onclick="togglePartnerFilter('+"'ALL-DONORS'"+', this);"'+
       ' style="margin-right:10px;">All<span class="glyphicon glyphicon-check" style="margin-left:4px;"></span></button>';
   partnerList.sort();
@@ -235,9 +229,7 @@ function parsePartners() {
   $('#partnerButtons').html(partnerFilterHtml);
   partnerButtons = $("#partnerButtons").children(); 
   changePartnerFilter();
-
 }
-
 
 var selectedPartners = [];
 
@@ -257,29 +249,22 @@ function changePartnerFilter(){
       provinceList[record.Admin2] = record.prov;
       municipList[record.Admin3] = record.municip;
       brgyList[record.Admin4] = record.brgy; 
-    }
-    
+    }    
   });
   colorProvinces();
   colorMunicip();
   colorBrgy();
   createTable();
-
-
 }
 
-var lastProvince;
 var loadedProvinces = [];
 var loadedMunicipalities = [];
 
-function clickedProvince(d) {
-    
+function clickedProvince(d) {    
   provinceGroup.selectAll("path").classed("active", false);
   municipGroup.selectAll("path").classed("active", false);
-  brgyGroup.selectAll("path").classed("active", false);
-
+  brgyGroup.selectAll("path").classed("active", false);  
   d3.select(this).classed("active", true);
-
   // load data if needed
   if($.inArray(d.properties.PCODE_PH1, loadedProvinces) === -1){
     $("#loading").show();   
@@ -296,11 +281,9 @@ function clickedProvince(d) {
   }
 }
 
-function clickedMunicip(d){
-  
+function clickedMunicip(d){  
   municipGroup.selectAll("path").classed("active", false);
   brgyGroup.selectAll("path").classed("active", false);
-
   d3.select(this).classed("active", true);
   // load data if needed
   if($.inArray(d.properties.PCODE_PH2, loadedMunicipalities) === -1){
@@ -319,20 +302,18 @@ function clickedMunicip(d){
 }
 
 function drawMunicipalities(d){
-  brgyGroup.selectAll("path").remove();
-  
+  brgyGroup.selectAll("path").remove();  
   var clickedPcode = d.properties.PCODE_PH1;
   var bounds = path.bounds(d),
-      dx = bounds[1][0] - bounds[0][0],
-      dy = bounds[1][1] - bounds[0][1],
-      x = (bounds[0][0] + bounds[1][0]) / 2,
-      y = (bounds[0][1] + bounds[1][1]) / 2,
-      scale = .9 / Math.max(dx / width, dy / height),
-      translate = [width / 2 - scale * x, height / 2 - scale * y];
+    dx = bounds[1][0] - bounds[0][0],
+    dy = bounds[1][1] - bounds[0][1],
+    x = (bounds[0][0] + bounds[1][0]) / 2,
+    y = (bounds[0][1] + bounds[1][1]) / 2,
+    scale = .9 / Math.max(dx / width, dy / height),
+    translate = [width / 2 - scale * x, height / 2 - scale * y];
   svg.transition()
       .duration(750)
       .call(zoom.translate(translate).scale(scale).event);
-
   var municipDisplay = municipGroup.selectAll("path")
       .data(municipData.features.filter(function(d) {return d.properties.PCODE_PH1 === clickedPcode;}), function(d) { return d.properties.PCODE_PH2; });
   municipDisplay.enter().append("path")
@@ -348,12 +329,9 @@ function drawMunicipalities(d){
   $("#loading").fadeOut(400);
   colorMunicip();
   createTable();
- 
 }
 
-
-function drawBarangays(d){
-   
+function drawBarangays(d){   
   var clickedPcode = d.properties.PCODE_PH2;
   var bounds = path.bounds(d),
       dx = bounds[1][0] - bounds[0][0]+5,
@@ -364,8 +342,7 @@ function drawBarangays(d){
       translate = [width / 2 - scale * x, height / 2 - scale * y];
   svg.transition()
       .duration(750)
-      .call(zoom.translate(translate).scale(scale).event);
-  
+      .call(zoom.translate(translate).scale(scale).event);  
   var brgyDisplay = brgyGroup.selectAll("path")
       .data(brgyData.features.filter(function(d) {return d.properties.PCODE_PH2 === clickedPcode;}), function(d) { return d.properties.PCODE_PH3; });
   brgyDisplay.enter().append("path").attr("d",path)
@@ -382,17 +359,12 @@ function drawBarangays(d){
   createTable();
 }
 
-
-
-
 var totalRow = {};
 var breakdownRows = {};
 
 function createTable(){
-
   var activePcode = "ALL";
-  var activeName = "Haiyan Operation";
-  
+  var activeName = "Haiyan Operation";  
   provinceGroup.selectAll(".active").each(function(d,i){
     activePcode = d.properties.PCODE_PH1;
     activeName = d.properties.name_1;
@@ -401,10 +373,8 @@ function createTable(){
       activeName = d.properties.name_2;
     });
   });
-
   totalRow = {};
-  breakdownRows = {};
-    
+  breakdownRows = {};    
   totalRow[activePcode] = { 'name' : activeName };
   $.each(indicatorList, function(index, indicator){
     totalRow[activePcode][indicator] = 0;
@@ -426,7 +396,6 @@ function createTable(){
             }
           });        
       }
-
       // province active
       if(record.Admin2 === activePcode){
         if(breakdownRows.hasOwnProperty(record.Admin3) === false){
@@ -494,25 +463,16 @@ function createTable(){
 
 }
 
-
-
-
-
-
 var provinceList = {};
 var municipList = {};
 var brgyList = {};
-
-
-
-
 
 function colorProvinces(){
   provinceGroup.selectAll("path").attr("fill", null);
   for(entry in provinceList){
     provinceGroup.selectAll("path")
         .filter(function(d) {return d.properties.PCODE_PH1 == entry})
-        .attr('fill',"red");
+        .attr('fill',"#ed1b2e");
   }
 }
 
@@ -521,7 +481,7 @@ function colorMunicip(){
   for(entry in municipList){
     municipGroup.selectAll("path")
         .filter(function(d) {return d.properties.PCODE_PH2 == entry})
-        .attr('fill',"red");
+        .attr('fill',"#f03f4f");
   }
 }
 
@@ -530,12 +490,9 @@ function colorBrgy(){
   for(entry in brgyList){
     brgyGroup.selectAll("path")
         .filter(function(d) {return d.properties.PCODE_PH3 == entry})
-        .attr('fill',"red");
-  }
-  
+        .attr('fill',"#f36471");
+  }  
 }
-
-
 
 function currentSectorData(){
   var activeSector = $('#sector-options').find('.active').attr('id');
@@ -554,9 +511,7 @@ function currentSectorData(){
   if(activeSector === "health"){
     return healthData;
   }
-
 }
-
 
 function togglePartnerFilter (filter, element) {
   if($(element).hasClass("filtering") !== true){
@@ -584,7 +539,6 @@ function togglePartnerFilter (filter, element) {
   changePartnerFilter();
 }
 
-
 // tooltip follows cursor
 $(document).ready(function() {
     $('#map').mouseover(function(e) {        
@@ -596,11 +550,6 @@ $(document).ready(function() {
         $("#tooltip").css({top:(e.pageY+15)+"px",left:(e.pageX+20)+"px"});        
     });
 });
-
-
-
-
-
 
 function zoomOut() {
   brgyGroup.selectAll("path").remove();
@@ -624,36 +573,11 @@ function zoomOut() {
       .duration(750)
       .call(zoom.translate([0, 0]).scale(1).event);
   }
-
-
-  // provinceGroup.selectAll("path").classed("active", false);
-  // municipGroup.selectAll("path").classed("active", false);
-  // brgyGroup.selectAll("path").classed("active", false);
-  
-  // $.each(partnerButtons, function(i, button){
-  //   $(button).children().removeClass("glyphicon-check");
-  //   $(button).children().addClass("glyphicon-unchecked");
-  //   $(button).removeClass("filtering");
-  // });
-  // $("#ALL-PARTNERS").children().removeClass("glyphicon-unchecked"); 
-  // $("#ALL-PARTNERS").children().addClass("glyphicon-check");
-  // $("#ALL-PARTNERS").addClass("filtering");   
-
-  // brgyGroup.selectAll("path").remove();
-  // municipGroup.selectAll("path").remove();
-  // svg.transition()
-  //     .duration(750)
-  //     .call(zoom.translate([0, 0]).scale(1).event);
-
-  // changePartnerFilter();
 }
-
-
  
 // show disclaimer text on click of dislcaimer link
 function showDisclaimer() {
-    window.alert("The maps on this page do not imply the expression of any opinion on the part of the Philippine Red Cross concerning the legal status of a territory or of its authorities.");
+  window.alert("Program data is subject to change. Data may be incomplete. For official reports please refer to documents published by the Philippine Red Cross and/or IFRC. The maps on this page do not imply the expression of any opinion concerning the legal status of a territory or of its authorities.");
 }
 
 d3Start();
-
