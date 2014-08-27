@@ -1,15 +1,12 @@
-var pageHeight = $(window).height();
-
-var pageWidth = $(window).width() - 15;
-//document width ???
-
-var width = pageWidth,
-    height = 300;
+var width = $(window).width() - 15,
+    height = 305;
 
 var projection = d3.geo.mercator()
     .scale(5000)
     .center([124,11])
     .translate([width / 2, height / 2]);
+
+fitProjection(projection, phlBoundingBox, [[0,0],[width, height]]);
 
 var path = d3.geo.path()
     .projection(projection);
@@ -554,12 +551,12 @@ $(document).ready(function() {
 function zoomOut() {
   brgyGroup.selectAll("path").remove();
   
-  var activeMunicip = "";
+  var activeMunicip = false;
   municipGroup.selectAll(".active").each(function(d){
-    activeMunicip = d;
+    activeMunicip = true;
   });
 
-  if(activeMunicip){
+  if(activeMunicip === true){
     console.log("active municip");
     provinceGroup.selectAll(".active").each(function(d){
       municipGroup.selectAll("path").classed("active", false);
@@ -573,6 +570,60 @@ function zoomOut() {
       .duration(750)
       .call(zoom.translate([0, 0]).scale(1).event);
   }
+}
+
+d3.select(window).on('resize', resize);
+
+function resize() {
+  // adjust things when the window size changes
+  width = $(window).width();
+  // update projection
+  var activeMunicip = [];
+  municipGroup.selectAll(".active").each(function(d){
+    activeMunicip.push(d);
+  });
+  var activeProvince = [];
+  provinceGroup.selectAll(".active").each(function(d){
+    activeProvince.push(d);
+  });
+
+  if (activeMunicip.length !== 0){
+    fitProjection(projection, phlBoundingBox, [[0,0],[width, height]]);
+    municipGroup.selectAll(".active").each(function(d){
+      var clickedPcode = d.properties.PCODE_PH1;
+      var bounds = path.bounds(d),
+      dx = bounds[1][0] - bounds[0][0],
+      dy = bounds[1][1] - bounds[0][1],
+      x = (bounds[0][0] + bounds[1][0]) / 2,
+      y = (bounds[0][1] + bounds[1][1]) / 2,
+      scale = .9 / Math.max(dx / width, dy / height),
+      translate = [width / 2 - scale * x, height / 2 - scale * y];
+      svg.transition()
+       .duration(750)
+       .call(zoom.translate(translate).scale(scale).event); 
+    });
+  } else if (activeProvince.length !== 0) {
+    fitProjection(projection, phlBoundingBox, [[0,0],[width, height]]);
+    provinceGroup.selectAll(".active").each(function(d){
+      var clickedPcode = d.properties.PCODE_PH1;
+      var bounds = path.bounds(d),
+      dx = bounds[1][0] - bounds[0][0],
+      dy = bounds[1][1] - bounds[0][1],
+      x = (bounds[0][0] + bounds[1][0]) / 2,
+      y = (bounds[0][1] + bounds[1][1]) / 2,
+      scale = .9 / Math.max(dx / width, dy / height),
+      translate = [width / 2 - scale * x, height / 2 - scale * y];
+      svg.transition()
+        .duration(750)
+        .call(zoom.translate(translate).scale(scale).event);
+    });
+  } else {
+    fitProjection(projection, phlBoundingBox, [[0,0],[width, height]]);
+  }
+  // resize the map container
+  svg.style('width', width + 'px');
+  // resize the map
+  svg.selectAll('path').attr('d', path);
 }
  
 // show disclaimer text on click of dislcaimer link

@@ -15,10 +15,16 @@ html, body {
   width: 275px;
 }
 
+#map{
+  background-color: #93d2f0;
+}
+
 svg {
   z-index: 9999;
   background-color: #93d2f0;
+  display: block;
 }
+
 circle {
   cursor: pointer;
 }
@@ -69,7 +75,7 @@ circle {
 .row {
   margin: 0;
 }
-.container-fluid, .col-map {
+.container-fluid {
   padding: 0;
 }
 .sector-btn-img {
