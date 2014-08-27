@@ -99,8 +99,8 @@ function loadSector(sector, target){
   if(sector === "livelihood"){
     indicatorList = [
       "HH Support Beneficiaries Selected", 
-      "First Installment (conditional PHP 6,000)", 
-      "Second Installment (conditional PHP 4,000)"
+      "First Installment", 
+      "Second Installment"
     ]; 
     if(livelihoodData.length === 0){
       $("#loading").show();
