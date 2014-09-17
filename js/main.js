@@ -557,8 +557,7 @@ function zoomOut() {
   });
 
   if(activeMunicip === true){
-    console.log("active municip");
-    provinceGroup.selectAll(".active").each(function(d){
+      provinceGroup.selectAll(".active").each(function(d){
       municipGroup.selectAll("path").classed("active", false);
       drawMunicipalities(d);
     });
