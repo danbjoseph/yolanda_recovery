@@ -19,12 +19,31 @@
   </head>
 
   <body>
+
+    <!-- Modal -->
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-footer">
+            <div style="text-align:left;">
+              <h4>Recovery operations after Typhoon Haiyan (Yolanda)</h4>
+              <p>Use the buttons to choose a sector and filter by cooperating partner. Click a province on the map to view the accomplishements by municipality for that province. Click a municipality on the map to view the accomplishements by barangay for that municipality.</p>
+            </div>  
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>            
+          </div>
+        </div>
+      </div>
+    </div>
     
     <div id="tooltip"></div>
     <div id="loading"><img id="loader" src="img/ajax_loader_gray_512.gif" /></div>
     <a href="http://www.redcross.org.ph/" target="_blank"><img class="prc-logo" src="img/PRC-logo_whiteBorder.png"></a>
-    <button class="btn btn-sm btn-zoom" type="button" onClick="zoomOut();">
+    <button class="btn btn-sm btn-zoom btn-custom1" type="button" onClick="zoomOut();">
       <span class="glyphicon glyphicon-zoom-out"></span> Zoom Out
+    </button>
+
+    <button class="btn btn-sm btn-instructions btn-custom1" type="button" onClick="$('#infoModal').modal();">
+      <span class="glyphicon glyphicon-info-sign"></span>
     </button>
          
     <div class="container-fluid">
@@ -61,7 +80,7 @@
 
         <hr>
 
-        <p>This site is under development. Thank you for your patience. Please submit feedback and data corrections by <a href="mailto:daniel.joseph@ifrc.org" target="_blank" title="daniel.joseph@ifrc.org">email</a>.</p> 
+        <p>Please submit feedback and data corrections by <a href="mailto:daniel.joseph@ifrc.org" target="_blank" title="daniel.joseph@ifrc.org">email</a>.</p> 
         <p>
           <span style="font-weight:bold;"> Last updated: September 8, 2014.</span>
           <span class="disclaimer"><a title="Disclaimer" onClick="showDisclaimer();">Disclaimer</a></span>
