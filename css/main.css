@@ -110,6 +110,10 @@ circle {
   outline: 0;
   color:#f5f5f5; 
 }
+.btn-donor.disabled {
+  background-color: #D7D7D8;
+}
+
 .btn-custom1{
   background-color: #ffffff;
   border-color: #d7d7d8;

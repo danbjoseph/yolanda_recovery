@@ -80,6 +80,12 @@ var indicatorList = [];
 var partnerList = [];
 var partnerButtons;
 
+var selectedPartner = "";
+
+var provinceList = {};
+var municipList = {};
+var brgyList = {};
+
 // adds "PH" to start of p-code in activity data so that format matches spatial data attributes
 function addPH(data){
   $(data).each(function(index, record){
@@ -228,29 +234,19 @@ function parsePartners() {
   changePartnerFilter();
 }
 
-var selectedPartners = [];
-
 function changePartnerFilter(){
-  selectedPartners = [];
   provinceList = {};
   municipList = {};
   brgyList = {};
-  $.each(partnerButtons, function(i, button){
-    if($(button).hasClass("filtering")){
-      var buttonid = $(button).attr("id");
-      selectedPartners.push(buttonid);
-    }
-  });
+  selectedPartner = $("#partnerButtons").find(".filtering").attr("id");
   $(currentSectorData()).each(function(index, record){
-    if(selectedPartners.indexOf(record.Partner) != -1  || selectedPartners.indexOf("ALL-PARTNERS") != -1 ){
+    if(selectedPartner === record.Partner  || selectedPartner === "ALL-PARTNERS" ){
       provinceList[record.Admin2] = record.prov;
       municipList[record.Admin3] = record.municip;
       brgyList[record.Admin4] = record.brgy; 
     }    
   });
-  colorProvinces();
-  colorMunicip();
-  colorBrgy();
+  colorMap();
   createTable();
 }
 
@@ -324,7 +320,7 @@ function drawMunicipalities(d){
       });
   municipDisplay.exit().remove();
   $("#loading").fadeOut(400);
-  colorMunicip();
+  colorMap();
   createTable();
 }
 
@@ -352,12 +348,14 @@ function drawBarangays(d){
       });
   brgyDisplay.exit().remove();
   $("#loading").fadeOut(400);
-  colorBrgy();
+  colorMap();
   createTable();
 }
 
 var totalRow = {};
 var breakdownRows = {};
+
+var areaPartners = [];
 
 function createTable(){
   var activePcode = "ALL";
@@ -375,9 +373,12 @@ function createTable(){
   totalRow[activePcode] = { 'name' : activeName };
   $.each(indicatorList, function(index, indicator){
     totalRow[activePcode][indicator] = 0;
-  });  
+  }); 
+
+  disablePartnerButtons(activePcode);
+
   $(currentSectorData()).each(function(index, record){
-    if(selectedPartners.indexOf(record.Partner) != -1  || selectedPartners.indexOf("ALL-PARTNERS") != -1 ){
+    if(selectedPartner === record.Partner || selectedPartner === "ALL-PARTNERS" ){
       // operation overview
       if("ALL" === activePcode){
           if(breakdownRows.hasOwnProperty(record.Admin2) === false){
@@ -460,35 +461,50 @@ function createTable(){
 
 }
 
-var provinceList = {};
-var municipList = {};
-var brgyList = {};
-
-function colorProvinces(){
+function colorMap(){
   provinceGroup.selectAll("path").attr("fill", null);
   for(entry in provinceList){
     provinceGroup.selectAll("path")
         .filter(function(d) {return d.properties.PCODE_PH1 == entry})
         .attr('fill',"#ed1b2e");
   }
-}
-
-function colorMunicip(){
   municipGroup.selectAll("path").attr("fill", null);
   for(entry in municipList){
     municipGroup.selectAll("path")
         .filter(function(d) {return d.properties.PCODE_PH2 == entry})
         .attr('fill',"#f03f4f");
-  }
-}
-
-function colorBrgy(){
+  }  
   brgyGroup.selectAll("path").attr("fill", null);
   for(entry in brgyList){
     brgyGroup.selectAll("path")
         .filter(function(d) {return d.properties.PCODE_PH3 == entry})
         .attr('fill',"#f36471");
   }  
+}
+
+function disablePartnerButtons(activePcode){
+  areaPartners = ["ALL-PARTNERS"]; 
+  $(currentSectorData()).each(function(index, record){  
+      // operation overview
+      if("ALL" === activePcode){
+        areaPartners.push(record.Partner);      
+      }
+      // province active
+      if(record.Admin2 === activePcode){
+        areaPartners.push(record.Partner);
+      }
+      // muncip active
+      if(record.Admin3 === activePcode){
+        areaPartners.push(record.Partner);
+      } 
+  });
+  $(partnerButtons).removeClass("disabled");
+  $.each(partnerButtons, function(index, button){
+    var buttonPartner = $(button).attr("id");
+    if($.inArray(buttonPartner, areaPartners) === -1){
+      $(button).addClass("disabled");
+    }
+  });
 }
 
 function currentSectorData(){
