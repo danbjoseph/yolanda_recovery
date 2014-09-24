@@ -86,16 +86,6 @@ var provinceList = {};
 var municipList = {};
 var brgyList = {};
 
-// adds "PH" to start of p-code in activity data so that format matches spatial data attributes
-function addPH(data){
-  $(data).each(function(index, record){
-    record.Admin2 = "PH"+record.Admin2;
-    record.Admin3 = "PH"+record.Admin3;
-    record.Admin4 = "PH"+record.Admin4;
-  });
-  return data;
-}
-
 function loadSector(sector, target){
   d3.select("#sector-options").selectAll(".btn").classed("active", false);
   d3.select(target).classed("active", true);
@@ -108,7 +98,7 @@ function loadSector(sector, target){
     if(livelihoodData.length === 0){
       $("#loading").show();
       d3.csv("data/recovery_livelihood.csv", function(data) { 
-        livelihoodData = addPH(data);
+        livelihoodData = data;
         $("#loading").fadeOut(300);
         parsePartners(); 
       });
@@ -125,13 +115,15 @@ function loadSector(sector, target){
       "Shelter Repair Closeout / Completed",
       "Core Shelter Beneficiaries Selected",
       "Construction Started",
+      "Ongoing",
       "Wooden Shelter (Core Shelter)",
-      "Half Concrete (Core Shelter)"
+      "Half Concrete (Core Shelter)",
+      "Relocation Beneficiaries Selected"
     ]; 
     if(shelterData.length === 0){
       $("#loading").show();
       d3.csv("data/recovery_shelter.csv", function(data) { 
-        shelterData = addPH(data);
+        shelterData = calculateShelterOngoing(data);
         $("#loading").fadeOut(300);
         parsePartners(); 
       });
@@ -160,7 +152,7 @@ function loadSector(sector, target){
     if(healthData.length === 0){
       $("#loading").show();
       d3.csv("data/recovery_health.csv", function(data) { 
-        healthData = addPH(data);
+        healthData = data;
         $("#loading").fadeOut(300);
         parsePartners(); 
       });
@@ -178,7 +170,7 @@ function loadSector(sector, target){
     if(educationData.length === 0){
       $("#loading").show();
       d3.csv("data/recovery_education.csv", function(data) { 
-        educationData = addPH(data);
+        educationData = data;
         $("#loading").fadeOut(300);
         parsePartners(); 
       });
@@ -188,21 +180,14 @@ function loadSector(sector, target){
   }
   if(sector === "watsan"){
     indicatorList = [
-      "Core Shelter Latrines",
-      "Relocation Latrines",
-      "Reached w/ Hygiene Promotion (PHAST)",
-      "Schools Selected",
-      "School Latrine Construction Completed",
-      "Reached w/ HP (CHAST)",
-      "ECCD Selected",
-      "ECCD latrine Construction Completed",
-      "People Reached w/ CHAST",
-      "# of Hygiene Kit Distributed"
+      "Latrines Started (Core and Relocation)",
+      "Core Shelter Latrines Completed",
+      "Relocation Latrines Completed"
     ]; 
     if(watsanData.length === 0){
       $("#loading").show();
       d3.csv("data/recovery_watsan.csv", function(data) { 
-        watsanData = addPH(data);
+        watsanData = data;
         $("#loading").fadeOut(300);
         parsePartners(); 
       });
@@ -210,6 +195,14 @@ function loadSector(sector, target){
       parsePartners();
     }    
   }    
+}
+
+function calculateShelterOngoing(data) {
+  $.each(data, function(index, item){
+    var ongoing = item["Construction Started"] - item["Wooden Shelter (Core Shelter)"] - item["Half Concrete (Core Shelter)"];
+    item["Ongoing"] = ongoing;
+  });
+  return data;
 }
 
 //rebuild partners buttons
