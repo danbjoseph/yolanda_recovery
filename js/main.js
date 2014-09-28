@@ -75,6 +75,7 @@ var shelterData = [];
 var healthData = [];
 var watsanData = [];
 var educationData = [];
+var drrData = [];
 
 var indicatorList = [];
 var partnerList = [];
@@ -114,11 +115,11 @@ function loadSector(sector, target){
       "CGI",
       "Shelter Repair Closeout / Completed",
       "Core Shelter Beneficiaries Selected",
+      "Relocation Beneficiaries Selected",
       "Construction Started",
       "Ongoing",
       "Wooden Shelter (Core Shelter)",
-      "Half Concrete (Core Shelter)",
-      "Relocation Beneficiaries Selected"
+      "Half Concrete (Core Shelter)"
     ]; 
     if(shelterData.length === 0){
       $("#loading").show();
@@ -140,14 +141,12 @@ function loadSector(sector, target){
       "Community Selected",
       "# Households in Targeted Community",
       "Facilitators Trained",
-      "CHVs Trained",
-      "Distributed Kits",
-      "Women of Reproductive age reached w/ Maternal and Childcare Promotion",
-      "PSP to Affected Sessions Conducted",
-      "Volunteers trained as Facilitators on PSP-RFL",
-      "Individuals Reached",
-      "PSP for Humanitarians Sessions Conducted",
-      "Humanitarians Reached"
+      "CHVs Trained"
+      // "PSP to Affected Sessions Conducted",
+      // "Volunteers trained as Facilitators on PSP-RFL",
+      // "Individuals Reached",
+      // "PSP for Humanitarians Sessions Conducted",
+      // "Humanitarians Reached"
     ]; 
     if(healthData.length === 0){
       $("#loading").show();
@@ -181,20 +180,41 @@ function loadSector(sector, target){
   if(sector === "watsan"){
     indicatorList = [
       "Latrines Started (Core and Relocation)",
-      "Core Shelter Latrines Completed",
-      "Relocation Latrines Completed"
+      "Ongoing",
+      "Core Latrines Completed",
+      "Relocation Latrines Completed",
+      "# of PHAST volunteers trained",
+      "Schools Selected for Latrines"
+      // "Schools w Latrine Construction Started",
+      // "Schools w/ Latrine Construction Completed"
     ]; 
     if(watsanData.length === 0){
       $("#loading").show();
       d3.csv("data/recovery_watsan.csv", function(data) { 
-        watsanData = data;
+        watsanData = calculateLatrineOngoing(data);
         $("#loading").fadeOut(300);
         parsePartners(); 
       });
     } else {
       parsePartners();
     }    
-  }    
+  }
+  if(sector === "drr"){
+    indicatorList = [
+      "Communities Organized (RC 143)",
+      "Individuals Organized (RC 143)"
+    ]; 
+    if(drrData.length === 0){
+      $("#loading").show();
+      d3.csv("data/recovery_drr.csv", function(data) { 
+        drrData = data;
+        $("#loading").fadeOut(300);
+        parsePartners(); 
+      });
+    } else {
+      parsePartners();
+    }    
+  }     
 }
 
 function calculateShelterOngoing(data) {
@@ -204,6 +224,14 @@ function calculateShelterOngoing(data) {
   });
   return data;
 }
+function calculateLatrineOngoing(data) {
+  $.each(data, function(index, item){
+    var ongoing = item["Latrines Started (Core and Relocation)"] - item["Core Latrines Completed"] - item["Relocation Latrines Completed"];
+    item["Ongoing"] = ongoing;
+  });
+  return data;
+}
+
 
 //rebuild partners buttons
 function parsePartners() {
@@ -516,6 +544,9 @@ function currentSectorData(){
   }
   if(activeSector === "health"){
     return healthData;
+  }
+  if(activeSector === "drr"){
+    return drrData;
   }
 }
 
