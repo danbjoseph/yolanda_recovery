@@ -116,10 +116,10 @@ function loadSector(sector, target){
       "Shelter Repair Closeout / Completed",
       "Core Shelter Beneficiaries Selected",
       "Relocation Beneficiaries Selected",
-      "Construction Started",
-      "Ongoing",
-      "Wooden Shelter (Core Shelter)",
-      "Half Concrete (Core Shelter)"
+      "Ongoing Construction",
+      "Wooden Core Shelter Completed",
+      "Half-Concrete Core Shelter Completed",
+      "Training- Skilled Labour"
     ]; 
     if(shelterData.length === 0){
       $("#loading").show();
@@ -219,8 +219,8 @@ function loadSector(sector, target){
 
 function calculateShelterOngoing(data) {
   $.each(data, function(index, item){
-    var ongoing = item["Construction Started"] - item["Wooden Shelter (Core Shelter)"] - item["Half Concrete (Core Shelter)"];
-    item["Ongoing"] = ongoing;
+    var ongoing = item["Construction Started"] - item["Wooden Core Shelter Completed"] - item["Half-Concrete Core Shelter Completed"];
+    item["Ongoing Construction"] = ongoing;
   });
   return data;
 }
