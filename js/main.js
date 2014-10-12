@@ -179,14 +179,15 @@ function loadSector(sector, target){
   }
   if(sector === "watsan"){
     indicatorList = [
-      "Latrines Started (Core and Relocation)",
-      "Ongoing",
+      "Shelter Latrine Construction Ongoing",
       "Core Latrines Completed",
       "Relocation Latrines Completed",
       "# of PHAST volunteers trained",
-      "Schools Selected for Latrines"
-      // "Schools w Latrine Construction Started",
-      // "Schools w/ Latrine Construction Completed"
+      "Schools Selected for Latrines",
+      "Schools w/ Latrine Construction Ongoing",
+      "Schools w/ Latrine Construction Completed",
+      "# of CHAST trainings",
+      "# Students & Teachers trained in CHAST"
     ]; 
     if(watsanData.length === 0){
       $("#loading").show();
@@ -227,7 +228,9 @@ function calculateShelterOngoing(data) {
 function calculateLatrineOngoing(data) {
   $.each(data, function(index, item){
     var ongoing = item["Latrines Started (Core and Relocation)"] - item["Core Latrines Completed"] - item["Relocation Latrines Completed"];
-    item["Ongoing"] = ongoing;
+    item["Shelter Latrine Construction Ongoing"] = ongoing;
+    var schoolOngoing = item["Schools w/ Latrine Construction Started"] - item["Schools w/ Latrine Construction Completed"];
+    item["Schools w/ Latrine Construction Ongoing"] = schoolOngoing;
   });
   return data;
 }
