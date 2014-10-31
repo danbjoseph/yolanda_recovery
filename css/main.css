@@ -6,10 +6,10 @@ html, body {
 }
 
 .prc-logo {
-  height: 70px;
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 15px;
+  left: 15px;
+  z-index: 999;
 }
 #ifrc-logo{
   width: 275px;
