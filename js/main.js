@@ -186,7 +186,6 @@ function loadSector(sector, target){
       "Schools Selected for Latrines",
       "Schools w/ Latrine Construction Ongoing",
       "Schools w/ Latrine Construction Completed",
-      "# of CHAST trainings",
       "# Students & Teachers trained in CHAST"
     ]; 
     if(watsanData.length === 0){
