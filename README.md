@@ -3,7 +3,7 @@
 ## Haiyan Recovery
 
 
-[Interactive map](http://philippineredcross.github.io/yolanda_recovery) showing [Philippine Red Cross](http://www.redcross.org.ph/) recovery efforts after Typhoon Yolanda.
+Interactive map showing [Philippine Red Cross](http://www.redcross.org.ph/) recovery efforts after Typhoon Yolanda.
 
 
 **Technology Used:**
